@@ -1,0 +1,9 @@
+{
+  "name": "foo-bar-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/schnee72/foo-bar-api.git",
+  "author": "Dustin Schnee <schnee72@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
