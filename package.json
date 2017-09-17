@@ -20,5 +20,26 @@
   "devDependencies": {
     "eslint": "^4.7.0",
     "nodemon": "^1.12.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 7,
+      "sourceType": "module"
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "mocha": true
+    },
+    "rules": {
+      "no-console": 1
+    }
+  },
+  "nodemonConfig": {
+    "verbose": false
   }
 }
