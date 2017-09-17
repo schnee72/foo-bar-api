@@ -9,7 +9,7 @@ const path = require('path');
 // TODO - setup router...
 
 const app = express();
-const port = process.env.PORT || 1337;
+const port = process.env.PORT || 7331;
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({extended: true}));
