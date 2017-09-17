@@ -4,7 +4,6 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const compression = require('compression');
-// const path = require('path');
 
 // TODO - setup router...
 
