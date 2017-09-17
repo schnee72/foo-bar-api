@@ -11,6 +11,7 @@
     "dev": "nodemon src/index.js --exec \"eslint **/*.js && node\""
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.1",
     "compression": "^1.7.0",
     "express": "^4.15.4",
