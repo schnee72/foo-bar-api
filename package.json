@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js --exec \"eslint **/*.js && node\""
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js --exec \"eslint **/*.js && node\""
   },
   "dependencies": {
     "body-parser": "^1.18.1",
