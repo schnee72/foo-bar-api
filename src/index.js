@@ -5,22 +5,20 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const compression = require('compression');
 
-// TODO - setup router...
-
+const routes = require('./routes');
 const app = express();
 const port = process.env.PORT || 7331;
-
-app.use(helmet());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(compression());
 
 if (process.env.NODE_ENV === 'production')
 	app.use(morgan('combined'));
 else
 	app.use(morgan('dev'));
 
-app.get('/ping', (req, res) => res.send('pong'));
+app.use(helmet());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(compression());
+app.use('/', routes);
 
 app.listen(port, err => {
 	if (err)
