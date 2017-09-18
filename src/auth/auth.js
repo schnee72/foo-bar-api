@@ -14,7 +14,7 @@ const register = (credentials, done) => {
       bcrypt.hash(credentials.password, saltRounds)
         .then(hash => {
           sql.addUser(credentials.name, hash, () => {
-            jwt.sign(getPayload(credentials), process.env.JWT_KEY, (err, token) => {
+            jwt.sign(getPayload(credentials.name), process.env.JWT_KEY, (err, token) => {
               if (err)
                 done({status: 500, msg: { error: err }});
               else
