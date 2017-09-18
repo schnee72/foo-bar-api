@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 const sql = require('../sqlServer');
+const saltRounds = 10;
 
 const register = (credentials, done) => {
   if (!(credentials.name || credentials.password))
@@ -13,8 +14,12 @@ const register = (credentials, done) => {
       bcrypt.hash(credentials.password, saltRounds)
         .then(hash => {
           sql.addUser(credentials.name, hash, () => {
-            // TODO - generate jwt
-            done({ status: 201, msg: { hash: hash } });
+            jwt.sign(getPayload(credentials), process.env.JWT_KEY, (err, token) => {
+              if (err)
+                done({status: 500, msg: { error: err }});
+              else
+                done({ status: 201, msg: { jwt: token } });
+            });
           });
         })
         .catch(err => done({ status: 500, msg: { error: err } }));
@@ -28,5 +33,12 @@ const register = (credentials, done) => {
 // const verify = (jwt, done) => {
 // TODO - verify that the jwt is legit
 // };
+
+const getPayload = (val) => {
+  return {
+    exp: (Math.floor(Date.now() / 1000) + 3600),
+    data: val
+  };
+};
 
 module.exports = { register };
