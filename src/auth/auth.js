@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const register = (credentials, done) => {
+	if (!(credentials.id || credentials.password))
+		return done({status: 412, msg: {error: 'id and password are required'}});
 	// TODO - make sure user doesn't already exist
 	bcrypt.hash(credentials.password, saltRounds)
 		.then(hash => done({status: 201, msg: {hash: hash}}))
