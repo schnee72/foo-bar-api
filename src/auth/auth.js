@@ -49,9 +49,12 @@ const login = (credentials, done) => {
   });
 };
 
-// const verify = (jwt, done) => {
-// TODO - verify that the jwt is legit
-// };
+const verify = (token, done) => {
+  jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+
+    done(!err && decoded !== undefined);
+  });
+};
 
 const getPayload = (val) => {
   return {
@@ -68,4 +71,4 @@ const errorMessage = (status, err) => {
   return {status: status, msg: {error: err}};
 }
 
-module.exports = { register, login };
+module.exports = { register, login, verify };

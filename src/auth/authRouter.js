@@ -21,7 +21,8 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/verify', (req, res) => {
-  res.send('verify!');
+  auth.verify(req.body.jwt, ret => ret ?
+    res.send(ret) : res.status(401).send(ret));
 });
 
 module.exports = router;
