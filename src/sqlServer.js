@@ -16,12 +16,7 @@ const getUser = (name, done) => {
   new sql.Request()
     .input('name', name)
     .query('select * from dbo.auth where name = @name')
-    .then(result => {
-      if (result.recordset.length > 0)
-        done(true);
-      else
-        done(false);
-    })
+    .then(result => done(result))
     .catch(err => console.log(err));
 };
 
@@ -32,6 +27,6 @@ const addUser = (name, hash, done) => {
     .query('insert into dbo.auth (name, hash) values(@name, @hash)')
     .then(() => done())
     .catch(err => console.log(err));
-}
+};
 
 module.exports = { getUser, addUser };

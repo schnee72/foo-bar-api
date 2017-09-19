@@ -8,45 +8,49 @@ const register = (credentials, done) => {
   if (!(credentials.name || credentials.password))
     return done({ status: 412, msg: { error: 'id and password are required' } });
   sql.getUser(credentials.name, result => {
-    if (result) // exits
-      return done({ status: 409, msg: { errror: "conflict" } });
+    if (result.recordset.length > 0) // exits
+      return done({ status: 409, msg: { errror: 'conflict' } });
     else // doesn't exist
-      hash(credentials.password, hash => {
-        if (hash.error)
-          done({ status: 500, msg: hash.error });
-        else
-          generateJwt(credentials.name, token => {
-            if (token.error)
-              done({ status: 500, msg: token.error });
-            else
-              done({ status: 201, msg: { jwt: token } });
+      bcrypt.hash(credentials.password, saltRounds)
+        .then(hash => {
+          sql.addUser(credentials.name, hash, () => {
+            jwt.sign(getPayload(credentials.name), process.env.JWT_KEY, (err, token) => {
+              if (err)
+                done({status: 500, msg: { error: err }});
+              else
+                done({ status: 201, msg: { jwt: token } });
+            });
           });
-      });
+        })
+        .catch(err => done({ status: 500, msg: { error: err } }));
   });
 };
 
-// const login = (credentials, done) => {
-// TODO - check user in db and then generate a jwt and return it
-// };
+const login = (credentials, done) => {
+  if (!(credentials.name || credentials.password))
+    return done({ status: 412, msg: { error: 'id and password are required' } });
+  sql.getUser(credentials.name, result => {
+    if (result.recordset.length > 0) // exits
+      return done({ status: 409, msg: { errror: 'conflict' } });
+    else // doesn't exist
+      bcrypt.compare(credentials.password, result.recordset[0].hash)
+        .then(res => {
+          if (res)
+            jwt.sign(getPayload(credentials.name), process.env.JWT_KEY, (err, token) => {
+              if (err)
+                done({status: 500, msg: { error: err }});
+              else
+                done({ status: 201, msg: { jwt: token } });
+            });
+          else
+            done({ status: 401, msg: { error: 'unauthorized' } });
+        });
+  });
+};
 
 // const verify = (jwt, done) => {
 // TODO - verify that the jwt is legit
 // };
-
-const hash = (password, done) => {
-  bcrypt.hash(password, saltRounds)
-    .then(hash => done(hash))
-    .catch(err => done({ error: err }));
-}
-
-const generateJwt = (name, done) => {
-  jwt.sign(getPayload(name), process.env.JWT_KEY, (err, token) => {
-    if (err)
-      done({ error: err });
-    else
-      done(token);
-  });
-};
 
 const getPayload = (val) => {
   return {
@@ -55,4 +59,4 @@ const getPayload = (val) => {
   };
 };
 
-module.exports = { register };
+module.exports = { register, login };
