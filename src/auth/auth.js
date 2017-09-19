@@ -8,9 +8,9 @@ const register = (credentials, done) => {
   if (missingCredentials(credentials))
     return done(errorMessage(412, 'name and password are required'));
   sql.getUser(credentials.name, result => {
-    if (result.recordset.length > 0) // exits
+    if (result.recordset.length > 0)
       return done(errorMessage(409, 'conflict'));
-    else // doesn't exist
+    else
       bcrypt.hash(credentials.password, saltRounds)
         .then(hash => {
           sql.addUser(credentials.name, hash, () => {
@@ -30,7 +30,7 @@ const login = (credentials, done) => {
   if (missingCredentials(credentials))
     return done(errorMessage(412, 'name and password are required'));
   sql.getUser(credentials.name, result => {
-    if (result.recordset.length > 0) // exits
+    if (result.recordset.length > 0)
       bcrypt.compare(credentials.password, result.recordset[0].hash)
         .then(res => {
           if (res)
@@ -44,7 +44,7 @@ const login = (credentials, done) => {
             done(errorMessage(401, 'unauthorized'));
         })
         .catch(err => done(errorMessage(500, err)));
-    else // doesn't exist
+    else
       return done(errorMessage(404, 'not found'));
   });
 };
