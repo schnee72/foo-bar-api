@@ -16,7 +16,8 @@ router.post('/register', (req, res) =>
     res.status(ret.status).json(ret.msg)));
 
 router.post('/login', (req, res) => {
-  res.send('login!');
+  auth.login(req.body.credentials, ret =>
+    res.status(ret.status).json(ret.msg));
 });
 
 router.post('/verify', (req, res) => {

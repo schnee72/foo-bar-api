@@ -31,8 +31,6 @@ const login = (credentials, done) => {
     return done({ status: 412, msg: { error: 'id and password are required' } });
   sql.getUser(credentials.name, result => {
     if (result.recordset.length > 0) // exits
-      return done({ status: 409, msg: { errror: 'conflict' } });
-    else // doesn't exist
       bcrypt.compare(credentials.password, result.recordset[0].hash)
         .then(res => {
           if (res)
@@ -45,6 +43,8 @@ const login = (credentials, done) => {
           else
             done({ status: 401, msg: { error: 'unauthorized' } });
         });
+    else // doesn't exist
+      return done({ status: 404, msg: { errror: 'not found' } });
   });
 };
 
