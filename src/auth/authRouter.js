@@ -20,9 +20,9 @@ router.post('/login', (req, res) => {
     res.status(ret.status).json(ret.msg));
 });
 
-router.post('/verify', (req, res) => {
-  auth.verify(req.body.jwt, ret => ret ?
-    res.send(ret) : res.status(401).send(ret));
-});
+// router.post('/verify', (req, res) => {
+//   auth.verify(req.body.jwt, ret => ret ?
+//     res.send(ret) : res.status(401).send(ret));
+// });
 
 module.exports = router;
