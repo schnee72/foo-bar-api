@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const sql = require('../sqlServer');
 const saltRounds = 10;
 
+// TODO - add isAdmin flag
 const register = (credentials, done) => {
   if (missingCredentials(credentials))
     return done(errorMessage(412, 'name and password are required'));
@@ -51,7 +52,6 @@ const login = (credentials, done) => {
 
 const verify = (token, done) => {
   jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-
     done(!err && decoded !== undefined);
   });
 };
